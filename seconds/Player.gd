@@ -1,36 +1,73 @@
-extends Area2D
+extends KinematicBody2D
 
-signal hit
+const GRAVITY = 500.0
 
-export var speed = 400  # pixel/sec
-var screen_size
+const FLOOR_ANGLE_TOLERANCE = 60
+const WALK_FORCE = 600
+const WALK_MIN_SPEED = 10
+const WALK_MAX_SPEED = 200
+const STOP_FORCE = 1300
+const JUMP_SPEED = 200
+const JUMP_MAX_AIRBORNE_TIME = 0.2
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	screen_size = get_viewport_rect().size
-	# hide()
+const SLIDE_STOP_VELOCITY = 1.0  # one pixel/ second
+const SLIDE_MIN_STOP_TRAVEL = 1.0  # one pixel
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+var in_air_time = 0
+var jumping = false
+var velocity = Vector2()
+
+var prev_jump_pressed = false
+
 func _process(delta):
-	var velocity = Vector2()
-	if Input.is_action_pressed("ui_right"):
-		velocity.x += 1
-	if Input.is_action_pressed("ui_left"):
-		velocity.x -= 1
-	if Input.is_action_pressed("ui_up"):  # Jumping will be implemented later
-		velocity.y -= 1
-	if Input.is_action_pressed("ui_down"):
-		velocity.y += 1
-		
-	if velocity.length() > 0:
-		velocity = velocity.normalized() * speed
-		$AnimatedSprite.play("moving_right")
-		if velocity.x != 0:
-			$AnimatedSprite.flip_h = velocity.x < 0
-
+	if velocity.x != 0:
+		$AnimatedSprite.play("walking")
+		$AnimatedSprite.flip_h = velocity.x < 0
 	else:
-		$AnimatedSprite.play("standing")
+		$AnimatedSprite.play("idle")
+
+func _physics_process(delta):
+	var force = Vector2(0, GRAVITY)
+	
+	var walk_left = Input.is_action_pressed("ui_left")
+	var walk_right = Input.is_action_pressed("ui_right")
+	var jump = Input.is_action_pressed("ui_up")
+	
+	var stop = true
+	
+	if walk_left:
+		if velocity.x <= WALK_MIN_SPEED and velocity.x > -WALK_MAX_SPEED:
+			force.x -= WALK_FORCE
+			stop = false
+	elif walk_right:
+		if velocity.x >= -WALK_MIN_SPEED and velocity.x < WALK_MAX_SPEED:
+			force.x += WALK_FORCE
+			stop = false
+
+	if stop:
+		var vsign = sign(velocity.x)
+		var vlen = abs(velocity.x)
 		
-	position += velocity * delta
-	position.x = clamp(position.x, 0, screen_size.x)
-	position.y = clamp(position.y, 0, screen_size.y)
+		vlen -= STOP_FORCE * delta
+		if vlen < 0:
+			vlen = 0
+		
+		velocity.x = vlen * vsign
+	
+	velocity += force * delta
+	velocity = move_and_slide(velocity, Vector2(0, -1))
+	
+	if is_on_floor():
+		in_air_time = 0
+	
+	if jumping and velocity.y > 0:  # velocity.y > 0 means falling
+		jumping = false
+	
+	if in_air_time < JUMP_MAX_AIRBORNE_TIME and jump and not prev_jump_pressed and not jumping:
+		velocity.y = -JUMP_SPEED
+		jumping = true
+	
+	in_air_time += delta
+	prev_jump_pressed = jump
+	
+	
