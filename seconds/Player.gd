@@ -1,13 +1,13 @@
 extends KinematicBody2D
 
-const GRAVITY = 500.0
+const GRAVITY = 600.0
 
-const FLOOR_ANGLE_TOLERANCE = 60
-const WALK_FORCE = 600
+const FLOOR_ANGLE_TOLERANCE = 40
+const WALK_FORCE = 5000
 const WALK_MIN_SPEED = 10
 const WALK_MAX_SPEED = 200
-const STOP_FORCE = 1300
-const JUMP_SPEED = 200
+const STOP_FORCE = 2600
+const JUMP_SPEED = 300
 const JUMP_MAX_AIRBORNE_TIME = 0.2
 
 const SLIDE_STOP_VELOCITY = 1.0  # one pixel/ second
