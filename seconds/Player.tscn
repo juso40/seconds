@@ -22,7 +22,7 @@ animations = [ {
 "speed": 3.0
 } ]
 
-[node name="KinematicBody2D" type="KinematicBody2D"]
+[node name="Player" type="KinematicBody2D"]
 scale = Vector2( 2, 2 )
 script = ExtResource( 1 )
 __meta__ = {
@@ -41,20 +41,4 @@ speed_scale = 2.0
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
 zoom = Vector2( 0.5, 0.5 )
-
-[node name="HUD" type="MarginContainer" parent="Camera2D"]
-margin_right = 44.0
-margin_bottom = 14.0
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/HUD"]
-margin_right = 44.0
-margin_bottom = 14.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/HUD/HBoxContainer"]
-margin_right = 44.0
-margin_bottom = 14.0
-
-[node name="Label" type="Label" parent="Camera2D/HUD/HBoxContainer/VBoxContainer"]
-margin_right = 44.0
-margin_bottom = 14.0
-text = "DSAAA"
+process_mode = 0

@@ -1,73 +1,40 @@
 extends KinematicBody2D
 
-const GRAVITY = 600.0
+const GRAVITY = 20
+const ACCELERATION = 32
+const MAX_SPEED = 200
+const JUMP_HEIGHT = 500
+const GROUND_FRICTION = 0.3
+const AIR_FRICTION = 0.05
 
-const FLOOR_ANGLE_TOLERANCE = 40
-const WALK_FORCE = 5000
-const WALK_MIN_SPEED = 10
-const WALK_MAX_SPEED = 200
-const STOP_FORCE = 2600
-const JUMP_SPEED = 300
-const JUMP_MAX_AIRBORNE_TIME = 0.2
-
-const SLIDE_STOP_VELOCITY = 1.0  # one pixel/ second
-const SLIDE_MIN_STOP_TRAVEL = 1.0  # one pixel
-
-var in_air_time = 0
-var jumping = false
 var velocity = Vector2()
 
-var prev_jump_pressed = false
-
-func _process(delta):
-	if velocity.x != 0:
-		$AnimatedSprite.play("walking")
-		$AnimatedSprite.flip_h = velocity.x < 0
-	else:
-		$AnimatedSprite.play("idle")
-
 func _physics_process(delta):
-	var force = Vector2(0, GRAVITY)
+	velocity.y += GRAVITY
+	var b_friction = false
 	
-	var walk_left = Input.is_action_pressed("ui_left")
-	var walk_right = Input.is_action_pressed("ui_right")
-	var jump = Input.is_action_pressed("ui_up")
-	
-	var stop = true
-	
-	if walk_left:
-		if velocity.x <= WALK_MIN_SPEED and velocity.x > -WALK_MAX_SPEED:
-			force.x -= WALK_FORCE
-			stop = false
-	elif walk_right:
-		if velocity.x >= -WALK_MIN_SPEED and velocity.x < WALK_MAX_SPEED:
-			force.x += WALK_FORCE
-			stop = false
-
-	if stop:
-		var vsign = sign(velocity.x)
-		var vlen = abs(velocity.x)
+	if Input.is_action_pressed("ui_left"):
+		velocity.x = max(velocity.x - ACCELERATION, -MAX_SPEED)
+		$AnimatedSprite.flip_h = true
+		$AnimatedSprite.play("walking")
+	elif Input.is_action_pressed("ui_right"):
+		velocity.x = min(velocity.x + ACCELERATION, MAX_SPEED)
+		$AnimatedSprite.flip_h = false
+		$AnimatedSprite.play("walking")
+	else:
+		b_friction = true
+		$AnimatedSprite.play("idle")
 		
-		vlen -= STOP_FORCE * delta
-		if vlen < 0:
-			vlen = 0
+	if is_on_floor():
+		if Input.is_action_just_pressed("ui_up"):
+			velocity.y = -JUMP_HEIGHT
+		if b_friction:
+			velocity.x = lerp(velocity.x, 0, GROUND_FRICTION)
+	else:
+		if b_friction:
+			velocity.x = lerp(velocity.x, 0, AIR_FRICTION)
 		
-		velocity.x = vlen * vsign
-	
-	velocity += force * delta
 	velocity = move_and_slide(velocity, Vector2(0, -1))
 	
-	if is_on_floor():
-		in_air_time = 0
-	
-	if jumping and velocity.y > 0:  # velocity.y > 0 means falling
-		jumping = false
-	
-	if in_air_time < JUMP_MAX_AIRBORNE_TIME and jump and not prev_jump_pressed and not jumping:
-		velocity.y = -JUMP_SPEED
-		jumping = true
-	
-	in_air_time += delta
-	prev_jump_pressed = jump
 	
 	
