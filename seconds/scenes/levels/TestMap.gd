@@ -6,14 +6,18 @@ extends Node2D
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	$HUD.show()
-	$HUD.show_message("Go!")
+	$Player/HUD.show()
+	$Player/HUD.show_message("Go!")
 
 func _process(delta):
-	if $Player.position.y >= 200:
-		$HUD.show_message("You Died!")
+	pass
+
+
+func _on_DeathZone_body_entered(body):
+	if body == $Player:
+		$Player/HUD.show_message("You Died!")
 		var t = Timer.new()
-		t.set_wait_time(0.75)
+		t.set_wait_time(1.25)
 		t.set_one_shot(true)
 		self.add_child(t)
 		t.start()

@@ -83,7 +83,15 @@ margin_right = 1004.0
 margin_bottom = 98.0
 alignment = 2
 
-[node name="Label" type="Label" parent="HUD_Box/HBoxContainer"]
+[node name="FPS" type="Label" parent="HUD_Box/HBoxContainer"]
+margin_right = 851.0
+margin_bottom = 78.0
+size_flags_horizontal = 3
+size_flags_vertical = 5
+custom_colors/font_color = Color( 0.0470588, 0.894118, 0.0627451, 1 )
+text = "FPS"
+
+[node name="HP_Text" type="Label" parent="HUD_Box/HBoxContainer"]
 margin_left = 855.0
 margin_right = 895.0
 margin_bottom = 78.0

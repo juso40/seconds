@@ -7,7 +7,13 @@ const JUMP_HEIGHT = 500
 const GROUND_FRICTION = 0.3
 const AIR_FRICTION = 0.05
 
+var hp = 100
+
 var velocity = Vector2()
+
+func _ready():
+	add_to_group("player")
+	hp = 100
 
 func _physics_process(delta):
 	velocity.y += GRAVITY
@@ -36,3 +42,13 @@ func _physics_process(delta):
 		
 	velocity = move_and_slide(velocity, Vector2(0, -1))
 	
+func take_damage(value):
+	if $HUD:
+		hp -= value
+		$HUD.update_hp(int(round(hp)))
+		if hp <= 0:
+			play_death()
+
+func play_death():
+	if $HUD:
+		$HUD.show_message("You dies!")
