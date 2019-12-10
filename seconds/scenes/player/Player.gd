@@ -8,7 +8,7 @@ const GROUND_FRICTION = 0.3
 const AIR_FRICTION = 0.05
 
 var hp = 100
-
+var time_left = 10.0
 var velocity = Vector2()
 
 func _ready():
@@ -41,14 +41,17 @@ func _physics_process(delta):
 			velocity.x = lerp(velocity.x, 0, AIR_FRICTION)
 		
 	velocity = move_and_slide(velocity, Vector2(0, -1))
+	# update clock/ timer
+	time_left -= delta
+	$HUD.update_clock(time_left)
 	
 func take_damage(value):
 	if $HUD:
 		hp -= value
-		$HUD.update_hp(int(round(hp)))
+		$HUD.update_hp(round(hp))
 		if hp <= 0:
 			play_death()
 
 func play_death():
 	if $HUD:
-		$HUD.show_message("You dies!")
+		$HUD.show_message("You died!")

@@ -23,3 +23,6 @@ func _ready():
 func _process(delta):
 	if b_show_fps and delta != 0:
 		$HUD_Box/HBoxContainer/FPS.text = str(int(round(1/delta)))
+
+func update_clock(time):
+	$HUD_Box/HBoxContainer/Clock.text = str(time)

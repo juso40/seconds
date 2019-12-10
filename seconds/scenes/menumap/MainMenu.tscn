@@ -115,7 +115,6 @@ position = Vector2( 1042.21, 527.799 )
 scale = Vector2( 2, 2 )
 frames = SubResource( 4 )
 animation = "walking"
-frame = 1
 speed_scale = 3.0
 playing = true
 
@@ -123,6 +122,7 @@ playing = true
 "anims/MainMenu Runner" = SubResource( 5 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
+editor/display_folded = true
 anchor_right = 1.0
 anchor_bottom = 1.0
 
