@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://scenes/menumap/MainMenu.gd" type="Script" id=1]
 [ext_resource path="res://art/parallax_background/mountains.png" type="Texture" id=2]
@@ -7,7 +7,8 @@
 [ext_resource path="res://art/player/player_right1.png" type="Texture" id=5]
 [ext_resource path="res://art/player/player_right2.png" type="Texture" id=6]
 [ext_resource path="res://art/player/player_right3.png" type="Texture" id=7]
-[ext_resource path="res://font/LUMOS.TTF" type="DynamicFontData" id=8]
+[ext_resource path="res://art/ui/start.png" type="Texture" id=8]
+[ext_resource path="res://font/LUMOS.TTF" type="DynamicFontData" id=9]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 0, 0, 16, 0, 16, 16, 0, 16 )
@@ -78,7 +79,7 @@ tracks/0/keys = {
 size = 64
 outline_size = 1
 outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 8 )
+font_data = ExtResource( 9 )
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
@@ -114,6 +115,7 @@ position = Vector2( 1042.21, 527.799 )
 scale = Vector2( 2, 2 )
 frames = SubResource( 4 )
 animation = "walking"
+frame = 1
 speed_scale = 3.0
 playing = true
 
@@ -141,11 +143,15 @@ margin_top = 266.0
 margin_right = 128.0
 margin_bottom = 334.0
 
-[node name="StartButton" type="Button" parent="HBoxContainer/CenterContainer2/VBoxContainer"]
+[node name="StartButton" type="TextureButton" parent="HBoxContainer/CenterContainer2/VBoxContainer"]
 margin_right = 128.0
 margin_bottom = 32.0
 rect_min_size = Vector2( 128, 32 )
-text = "START"
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture_normal = ExtResource( 8 )
+expand = true
+stretch_mode = 6
 
 [node name="QuitButton" type="Button" parent="HBoxContainer/CenterContainer2/VBoxContainer"]
 margin_top = 36.0
