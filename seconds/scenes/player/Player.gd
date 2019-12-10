@@ -15,21 +15,28 @@ func _ready():
 	add_to_group("player")
 	hp = 100
 
+var b_runs_right = true
 func _physics_process(delta):
 	velocity.y += GRAVITY
 	var b_friction = false
 	
-	if Input.is_action_pressed("ui_left"):
-		velocity.x = max(velocity.x - ACCELERATION, -MAX_SPEED)
-		$AnimatedSprite.flip_h = true
-		$AnimatedSprite.play("walking")
-	elif Input.is_action_pressed("ui_right"):
+	if b_runs_right:
 		velocity.x = min(velocity.x + ACCELERATION, MAX_SPEED)
 		$AnimatedSprite.flip_h = false
 		$AnimatedSprite.play("walking")
 	else:
-		b_friction = true
-		$AnimatedSprite.play("idle")
+		velocity.x = max(velocity.x - ACCELERATION, -MAX_SPEED)
+		$AnimatedSprite.flip_h = true
+		$AnimatedSprite.play("walking")
+	
+	if Input.is_action_pressed("ui_left"):
+		b_runs_right = false
+	elif Input.is_action_pressed("ui_right"):
+		b_runs_right = true
+	else:
+		pass
+		# b_friction = true
+		# $AnimatedSprite.play("idle")
 		
 	if is_on_floor():
 		if Input.is_action_just_pressed("ui_up"):
